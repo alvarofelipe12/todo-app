@@ -20,6 +20,26 @@
       [disabled]="!newTaskTitle.length"
     >Add</ion-button>
   </ion-item>
+  <ion-item
+    class="ion-padding-bottom"
+    lines="none"
+  >
+    <ion-select
+      aria-label="Filter by"
+      label="Filter by Category"
+      justify="start"
+      (ionChange)="onFilter($event)"
+      [value]="categoryFilter"
+    >
+      <ion-select-option [value]="0">No filter</ion-select-option>
+      <ion-select-option
+        *ngFor="let category of categories$ | async"
+        [value]="category.id"
+      >
+        {{category.name}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
   <ion-list>
     <ion-item-sliding
       *ngFor="let task of tasks$ | async; trackBy: trackById"

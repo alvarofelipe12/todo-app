@@ -17,6 +17,7 @@ export class TodoListPage implements OnInit, OnDestroy {
   newTaskTitle = '';
   categories$!: Observable<CategoryModel[]>;
   categoryDeletionsSub?: Subscription;
+  categoryFilter?: number =  0;
 
   constructor(
     private taskService: TaskService,
@@ -76,5 +77,11 @@ export class TodoListPage implements OnInit, OnDestroy {
     const target = event.target as HTMLIonSelectElement;
     const categoryId = target.value as number;
     this.taskService.udpateCategoryOnTask(taskId, categoryId);
+  }
+
+  onFilter(event: Event): void {
+    const target = event.target as HTMLIonSelectElement;
+    const filterValue = target.value ? Number(target.value) : undefined;
+    this.taskService.filterTasksByCategory(filterValue);
   }
 }
