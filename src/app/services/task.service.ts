@@ -51,9 +51,7 @@ export class TaskService {
     if (task) {
       this.categoryService.categories$.subscribe({
         next: (categories) => {
-          task.category = categories.filter((c) => c.id !== idCategory)[0];
-        },
-        complete: () => {
+          task.category = categories.filter((c) => c.id === idCategory)[0];
           this.saveTasks();
         },
       });
@@ -64,11 +62,20 @@ export class TaskService {
     this.assignCategoryOnTask(idTask, categoryId);
   }
 
-  removeCategoryOnTask(idTask: number) {
-    const task = this.tasks.find((t) => t.id === idTask);
-    if (task) {
-      task.category = undefined;
-      this.saveTasks();
+  removeCategoryOnTask(idTask?: number, categoryId?: number) {
+    if (typeof idTask === 'number') {
+      const task = this.tasks.find((t) => t.id === idTask);
+      if (task) {
+        task.category = undefined;
+        this.saveTasks();
+      }
+    } else {
+      this.tasks = this.tasks.map((t) => {
+        if (t.category?.id === categoryId) {
+          t.category = undefined;
+        }
+        return t;
+      });
     }
   }
 

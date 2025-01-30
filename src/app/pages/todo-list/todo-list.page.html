@@ -27,6 +27,25 @@
     >
       <ion-item [ngClass]="{ 'completed': task.completed }">
         <ion-label>{{ task.title }}</ion-label>
+        <ion-list>
+          <ion-item>
+            <ion-select
+              aria-label="Category"
+              interface="action-sheet"
+              placeholder="Add a Categoy"
+              (ionChange)="handleChange($event, task.id)"
+              [value]="task.category?.id"
+            >
+              <ion-select-option
+                *ngFor="let category of categories$ | async"
+                [value]="category.id"
+              >
+                {{category.name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
       </ion-item>
 
       <ion-item-options side="start">
