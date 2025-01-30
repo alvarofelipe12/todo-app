@@ -1,20 +1,55 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      To-Do List
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-item class="ion-padding-bottom" lines="none">
+    <ion-input
+      [(ngModel)]="newTaskTitle"
+      placeholder="Add a new task"
+    ></ion-input>
+    <ion-button
+      (click)="addTask()"
+      [disabled]="!newTaskTitle.length"
+    >Add</ion-button>
+  </ion-item>
+  <ion-list>
+    <ion-item-sliding
+      *ngFor="let task of tasks$ | async"
+      #slidingItem
+    >
+      <ion-item [ngClass]="{ 'completed': task.completed }">
+        <ion-label>{{ task.title }}</ion-label>
+      </ion-item>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+      <ion-item-options side="start">
+        <ion-item-option
+          [color]="task.completed ? 'warning' : 'success'"
+          (click)="toggleTask(task.id, slidingItem)"
+        >
+          <ion-icon
+            slot="icon-only"
+            [name]="task.completed ? 'arrow-undo' : 'checkmark'"
+          >
+          </ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item-options side="end">
+        <ion-item-option
+          color="danger"
+          (click)="deleteTask(task.id, slidingItem)"
+        >
+          <ion-icon
+            slot="icon-only"
+            name="trash"
+          ></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
