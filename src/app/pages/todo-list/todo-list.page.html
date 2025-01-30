@@ -7,7 +7,10 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item class="ion-padding-bottom" lines="none">
+  <ion-item
+    class="ion-padding-bottom"
+    lines="none"
+  >
     <ion-input
       [(ngModel)]="newTaskTitle"
       placeholder="Add a new task"
@@ -19,7 +22,7 @@
   </ion-item>
   <ion-list>
     <ion-item-sliding
-      *ngFor="let task of tasks$ | async"
+      *ngFor="let task of tasks$ | async; trackBy: trackById"
       #slidingItem
     >
       <ion-item [ngClass]="{ 'completed': task.completed }">

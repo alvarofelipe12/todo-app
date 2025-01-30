@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { TaskService } from '../services/task.service';
-import { TaskModel } from '../models/task.model';
+import { Component, OnInit } from '@angular/core';
 import { IonItemSliding } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { TaskModel } from 'src/app/models/task.model';
+import { TaskService } from 'src/app/services/task.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-todo-list',
+  templateUrl: './todo-list.page.html',
+  styleUrls: ['./todo-list.page.scss'],
   standalone: false,
 })
-export class HomePage {
+export class TodoListPage implements OnInit {
   tasks$!: Observable<TaskModel[]>;
   newTaskTitle = '';
 
@@ -33,5 +33,9 @@ export class HomePage {
   deleteTask(id: number, slidingItem: IonItemSliding) {
     this.taskService.deleteTask(id);
     slidingItem.close();
+  }
+
+  trackById(index: number, task: TaskModel): number {
+    return task.id;
   }
 }

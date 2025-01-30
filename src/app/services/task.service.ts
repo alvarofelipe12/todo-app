@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TaskModel } from '../models/task.model';
 import { BehaviorSubject } from 'rxjs';
+import { CategoryService } from './category.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class TaskService {
   private tasksSubject = new BehaviorSubject<TaskModel[]>([]);
   tasks$ = this.tasksSubject.asObservable();
 
-  constructor() {
+  constructor(private categoryService: CategoryService) {
     this.loadTasks();
   }
 
@@ -43,5 +44,41 @@ export class TaskService {
   deleteTask(id: number) {
     this.tasks = this.tasks.filter((t) => t.id !== id);
     this.saveTasks();
+  }
+
+  assignCategoryOnTask(idTask: number, idCategory: number) {
+    const task = this.tasks.find((t) => t.id === idTask);
+    if (task) {
+      this.categoryService.categories$.subscribe({
+        next: (categories) => {
+          task.category = categories.filter((c) => c.id !== idCategory)[0];
+        },
+        complete: () => {
+          this.saveTasks();
+        },
+      });
+    }
+  }
+
+  udpateCategoryOnTask(idTask: number, categoryId: number) {
+    this.assignCategoryOnTask(idTask, categoryId);
+  }
+
+  removeCategoryOnTask(idTask: number) {
+    const task = this.tasks.find((t) => t.id === idTask);
+    if (task) {
+      task.category = undefined;
+      this.saveTasks();
+    }
+  }
+
+  filterTasksByCategory(categoryId?: number) {
+    let filteredTasks = [...this.tasks];
+    if (categoryId) {
+      filteredTasks = this.tasks.filter(
+        (task) => task.category?.id === categoryId
+      );
+    }
+    this.tasksSubject.next(filteredTasks);
   }
 }
