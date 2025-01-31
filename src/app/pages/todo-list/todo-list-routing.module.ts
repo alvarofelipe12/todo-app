@@ -8,10 +8,6 @@ const routes: Routes = [
     path: '',
     component: TodoListPage
   },
-  {
-    path: 'task-edit',
-    loadChildren: () => import('./task-edit/task-edit.module').then( m => m.TaskEditPageModule)
-  }
 ];
 
 @NgModule({

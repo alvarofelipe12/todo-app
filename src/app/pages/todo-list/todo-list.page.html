@@ -1,14 +1,19 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
       To-Do List
     </ion-title>
+    <!-- <ion-buttons slot="end" *ngIf="">
+      <ion-button (click)="toggleChange()">
+        <ion-icon name="contrast-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-item
-    class="ion-padding-bottom"
+    class="ion-margin-bottom"
     lines="none"
   >
     <ion-input
@@ -21,13 +26,13 @@
     >Add</ion-button>
   </ion-item>
   <ion-item
-    class="ion-padding-bottom"
+    class="ion-margin-bottom"
     lines="none"
   >
     <ion-select
       aria-label="Filter by"
       label="Filter by Category"
-      justify="start"
+      justify="space-between"
       (ionChange)="onFilter($event)"
       [value]="categoryFilter"
     >
@@ -40,14 +45,26 @@
       </ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-list>
+  <ion-grid
+    class="ion-no-padding"
+    *ngIf="!(tasks$ | async)?.length"
+  >
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <p>
+          No results found...
+        </p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list *ngIf="(tasks$ | async)?.length">
     <ion-item-sliding
       *ngFor="let task of tasks$ | async; trackBy: trackById"
       #slidingItem
     >
       <ion-item [ngClass]="{ 'completed': task.completed }">
         <ion-label>{{ task.title }}</ion-label>
-        <ion-list>
+        <ion-list *ngIf="(categories$ | async)?.length">
           <ion-item>
             <ion-select
               aria-label="Category"
