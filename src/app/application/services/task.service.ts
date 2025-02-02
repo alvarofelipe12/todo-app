@@ -1,39 +1,46 @@
 import { Injectable } from '@angular/core';
-import { TaskModel } from '../models/task.model';
 import { BehaviorSubject } from 'rxjs';
 import { CategoryService } from './category.service';
+import { TaskModel } from '../../domain/models/task.model';
+import { TaskRepository } from '../../domain/repositories/task.repository';
+import { LocalStorageService } from '../../infrastructure/storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TaskService {
+export class TaskService extends TaskRepository {
   private tasks: TaskModel[] = [];
   private tasksSubject = new BehaviorSubject<TaskModel[]>([]);
   tasks$ = this.tasksSubject.asObservable();
 
-  constructor(private categoryService: CategoryService) {
+  constructor(
+    private categoryService: CategoryService,
+    private localStorageService: LocalStorageService
+  ) {
+    super();
     this.loadTasks();
   }
 
-  private saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+  private saveTasks(): void {
+    this.localStorageService.saveData('tasks', this.tasks);
     this.tasksSubject.next([...this.tasks]);
   }
 
-  private loadTasks() {
-    const data = localStorage.getItem('tasks');
-    this.tasks = data ? JSON.parse(data) : [];
+  private loadTasks(): void {
+    this.tasks = this.localStorageService.getData<TaskModel[]>('tasks');
     this.tasksSubject.next([...this.tasks]);
   }
 
-  addTask(title: string) {
-    if (!title.trim()) return;
+  addTask(title: string): void {
+    if (!title.trim()) {
+      return;
+    }
     const newTask: TaskModel = { id: Date.now(), title, completed: false };
     this.tasks.push(newTask);
     this.saveTasks();
   }
 
-  toggleTask(id: number) {
+  toggleTask(id: number): void {
     const task = this.tasks.find((t) => t.id === id);
     if (task) {
       task.completed = !task.completed;
@@ -41,12 +48,12 @@ export class TaskService {
     }
   }
 
-  deleteTask(id: number) {
+  deleteTask(id: number): void {
     this.tasks = this.tasks.filter((t) => t.id !== id);
     this.saveTasks();
   }
 
-  assignCategoryOnTask(idTask: number, idCategory: number) {
+  assignCategoryOnTask(idTask: number, idCategory: number): void {
     const task = this.tasks.find((t) => t.id === idTask);
     if (task) {
       this.categoryService.categories$.subscribe({
@@ -58,11 +65,11 @@ export class TaskService {
     }
   }
 
-  udpateCategoryOnTask(idTask: number, categoryId: number) {
+  udpateCategoryOnTask(idTask: number, categoryId: number): void {
     this.assignCategoryOnTask(idTask, categoryId);
   }
 
-  removeCategoryOnTask(idTask?: number, categoryId?: number) {
+  removeCategoryOnTask(idTask?: number, categoryId?: number): void {
     if (typeof idTask === 'number') {
       const task = this.tasks.find((t) => t.id === idTask);
       if (task) {
@@ -79,7 +86,7 @@ export class TaskService {
     }
   }
 
-  filterTasksByCategory(categoryId?: number) {
+  filterTasksByCategory(categoryId?: number): void {
     let filteredTasks = [...this.tasks];
     if (categoryId) {
       filteredTasks = this.tasks.filter(

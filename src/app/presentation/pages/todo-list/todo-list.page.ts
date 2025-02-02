@@ -7,10 +7,6 @@ import {
 } from '@angular/core';
 import { IonItemSliding } from '@ionic/angular';
 import { combineLatest, map, Observable, Subscription, tap } from 'rxjs';
-import { CategoryModel } from 'src/app/models/category.model';
-import { TaskModel } from 'src/app/models/task.model';
-import { CategoryService } from 'src/app/services/category.service';
-import { TaskService } from 'src/app/services/task.service';
 import {
   fetchAndActivate,
   getAllChanges,
@@ -19,6 +15,10 @@ import {
 } from '@angular/fire/remote-config';
 import { FirebaseApp } from '@angular/fire/app';
 import { isPlatformServer } from '@angular/common';
+import { TaskModel } from '../../../domain/models/task.model';
+import { CategoryModel } from '../../../domain/models/category.model';
+import { TaskService } from '../../../application/services/task.service';
+import { CategoryService } from '../../../application/services/category.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -39,6 +39,7 @@ export class TodoListPage implements OnInit, OnDestroy {
     ? undefined
     : getRemoteConfig(inject(FirebaseApp));
   private remoteConfigSub?: Subscription;
+  pageTitle = 'To-Do List';
 
   constructor(
     private taskService: TaskService,

@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-buttons
+      slot="primary"
+      *ngIf="showActionButton"
+    >
+      <ion-button (click)="emitActionButtonRequest()" slot="start" [attr.aria-label]="actionButtonLabel">
+        <ion-icon
+          [name]="actionButtonIcon"
+          aria-hidden="true"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

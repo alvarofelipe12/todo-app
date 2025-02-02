@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { TodoListPageRoutingModule } from './todo-list-routing.module';
 
 import { TodoListPage } from './todo-list.page';
+import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TodoListPageRoutingModule
+    TodoListPageRoutingModule,
+    PageHeaderComponent,
   ],
-  declarations: [TodoListPage]
+  declarations: [TodoListPage],
 })
 export class TodoListPageModule {}

@@ -1,0 +1,28 @@
+<app-page-header
+  [pageTitle]="pageTitle"
+  [showActionButton]="true"
+  [actionButtonIcon]="addCategoryIconName"
+  [actionButtonLabel]="addCategoryButtonLabel"
+  (actionButtonRequest)="openCategoryModal()"
+></app-page-header>
+
+<ion-content class="ion-padding">
+  <app-categories-list
+    *ngIf="(categories$ | async)?.length; else elseTemplate"
+    [categories]="(categories$ | async)!"
+    (editCategory)="openCategoryModal($event)"
+    (deleteCategory)="deleteCategory($event)"
+  >
+  </app-categories-list>
+  <ng-template #elseTemplate>
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <p>
+            No categories found...
+          </p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
+</ion-content>
