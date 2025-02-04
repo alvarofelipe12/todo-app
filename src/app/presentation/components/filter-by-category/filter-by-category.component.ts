@@ -1,9 +1,9 @@
 import { CategoryService } from './../../../application/services/category.service';
 import { CommonModule } from '@angular/common';
 import { TaskService } from './../../../application/services/task.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { CategoryModel } from 'src/app/domain/models/category.model';
+import { CategoryModel } from '../../../domain/models/category.model';
 import { Observable } from 'rxjs';
 
 @Component({
