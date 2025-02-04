@@ -1,0 +1,13 @@
+<ion-item
+  class="ion-margin-bottom"
+  lines="none"
+>
+  <ion-input
+    [(ngModel)]="newTaskTitle"
+    placeholder="Add a new task"
+  ></ion-input>
+  <ion-button
+    (click)="addTask()"
+    [disabled]="!newTaskTitle.length"
+  >Add</ion-button>
+</ion-item>

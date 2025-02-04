@@ -1,0 +1,20 @@
+<ion-item
+  class="ion-margin-bottom"
+  lines="none"
+>
+  <ion-select
+    aria-label="Filter by"
+    label="Filter by Category"
+    justify="space-between"
+    (ionChange)="onFilterChange($event)"
+    [value]="categoryFilter"
+  >
+    <ion-select-option [value]="0">No filter</ion-select-option>
+    <ion-select-option
+      *ngFor="let category of categories$ | async; trackBy: trackById"
+      [value]="category.id"
+    >
+      {{category.name}}
+    </ion-select-option>
+  </ion-select>
+</ion-item>

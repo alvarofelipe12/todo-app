@@ -1,0 +1,18 @@
+<ion-list *ngIf="(categories$ | async)?.length">
+  <ion-item>
+    <ion-select
+      aria-label="Category"
+      interface="action-sheet"
+      placeholder="Add a Category"
+      (ionChange)="handleChange($event, task.id)"
+      [value]="task.category?.id"
+    >
+      <ion-select-option
+        *ngFor="let category of categories$ | async; trackBy: trackById"
+        [value]="category.id"
+      >
+        {{category.name}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-list>

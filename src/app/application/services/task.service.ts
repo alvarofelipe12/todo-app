@@ -69,7 +69,7 @@ export class TaskService extends TaskRepository {
     this.assignCategoryOnTask(idTask, categoryId);
   }
 
-  removeCategoryOnTask(idTask?: number, categoryId?: number): void {
+  removeCategoryOnTask(idTask?: number, categoryIds?: Set<number>): void {
     if (typeof idTask === 'number') {
       const task = this.tasks.find((t) => t.id === idTask);
       if (task) {
@@ -77,11 +77,11 @@ export class TaskService extends TaskRepository {
         this.saveTasks();
       }
     } else {
-      this.tasks = this.tasks.map((t) => {
-        if (t.category?.id === categoryId) {
-          t.category = undefined;
+      this.tasks = this.tasks.map((task) => {
+        if (task.category && !categoryIds?.has(task.category.id)) {
+          task.category = undefined;
         }
-        return t;
+        return task;
       });
     }
   }
@@ -94,5 +94,14 @@ export class TaskService extends TaskRepository {
       );
     }
     this.tasksSubject.next(filteredTasks);
+  }
+
+  updateCategoryOnTasks(categoryId: number, categoryName: string) {
+    this.tasks = this.tasks.map((task) => {
+      if (task.category && task.category.id === categoryId) {
+        task.category.name = categoryName;
+      }
+      return task;
+    });
   }
 }

@@ -1,11 +1,12 @@
+import { TaskService } from './../../../application/services/task.service';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
-import { IonItemSliding, ModalController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { ModalController } from '@ionic/angular';
+import { Observable, takeLast } from 'rxjs';
 import { CategoryModel } from '../../../domain/models/category.model';
 import { CategoryService } from '../../../application/services/category.service';
 import { CategoryFormModalComponent } from '../../components/category-form-modal/category-form-modal.component';
@@ -26,7 +27,8 @@ export class CategoriesPage implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private changeDetectorRef: ChangeDetectorRef,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private taskService: TaskService
   ) {}
 
   ngOnInit() {
@@ -35,6 +37,10 @@ export class CategoriesPage implements OnInit {
 
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id);
+    this.categories$.pipe(takeLast(1)).subscribe(categories => {
+      const categoryIds = new Set(categories.map((c) => c.id));
+      this.taskService.removeCategoryOnTask(undefined, categoryIds);
+    })
     this.changeDetectorRef.markForCheck();
   }
 
@@ -56,6 +62,10 @@ export class CategoriesPage implements OnInit {
         if (result.data) {
           if (category) {
             this.categoryService.updateCategory(
+              category.id,
+              result.data.categoryName
+            );
+            this.taskService.updateCategoryOnTasks(
               category.id,
               result.data.categoryName
             );
