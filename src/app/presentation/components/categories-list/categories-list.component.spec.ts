@@ -7,16 +7,15 @@ describe('CategoriesListComponent', () => {
   let component: CategoriesListComponent;
   let fixture: ComponentFixture<CategoriesListComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CategoriesListComponent ],
-      imports: [IonicModule.forRoot()]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [IonicModule.forRoot(), CategoriesListComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CategoriesListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
